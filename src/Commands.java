@@ -10,6 +10,7 @@ import java.util.Vector;
 
 public class Commands {
     private CatVector catVector;
+    Coding coding = new Coding();
     Connection connection;
     public Commands(CatVector catVector, Connection connection){
         this.catVector = catVector;
@@ -135,7 +136,7 @@ public class Commands {
                     statement = connection.prepareStatement("Select * from users");
                     resultSet = statement.executeQuery();
                     while (resultSet.next()){
-                        if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(obj.getPassword()))){
+                        if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getPassword(Integer.parseInt(obj.getPassword()))))){
                             flag ++;
                             return "Авторизация прошла успешна.";
                         }
@@ -151,12 +152,13 @@ public class Commands {
                     SendEmail.SMTP_AUTH_USER = "lexa200004";
                     SendEmail.SMTP_AUTH_PWD = "alex6a";
 
+
                     SendEmail sendEmail = new SendEmail(obj.getLogin(),"Регистрация");
                     boolean flagWr = sendEmail.sendMessage("Ваш пароль : " + password);
 
                     PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
                     preparedStatement.setString(1, obj.getLogin());
-                    preparedStatement.setString(2, String.valueOf(password));
+                    preparedStatement.setString(2, coding.getPassword(password));
                     preparedStatement.executeUpdate();
                     if (flagWr) {
                         return ("Вы успешно зарегестрированы, на Вашу почту отправлен пароль.");
