@@ -144,12 +144,15 @@ public class Commands {
                         break;
                     }
                 }
+                if (flag == 0){
+                    return "Неверно введён логин пользователя.";
+                }
                 if (flag == 1) {
                     try {
                         statement = connection.prepareStatement("Select * from users");
                         resultSet = statement.executeQuery();
                         while (resultSet.next()) {
-                            if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getPassword(Integer.parseInt(obj.getPassword()))))) {
+                            if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getCode("54Fz" + obj.getPassword())))) {
                                 flag++;
                                 return "Авторизация прошла успешна.";
                             }
@@ -158,10 +161,10 @@ public class Commands {
                             return "Неверный пароль.";
                         }
                     }catch (NumberFormatException e){
-                        return ("Вы забыли ввести пароль или ввели буквы.");
+                        return ("Вы забыли ввести пароль.");
                     }
                 }else{
-                    int password =(int) ((Math.random()*10)*1000 + (Math.random()*10)*100 + (Math.random()*10)*10 + (Math.random()*10));
+                    String password = coding.getPassword();
                     SendEmail.SMTP_SERVER = "smtp.mail.ru";
                     SendEmail.SMTP_Port = "465";
                     SendEmail.EMAIL_FROM = "lexa200004@mail.ru";
@@ -174,7 +177,7 @@ public class Commands {
 
                     PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
                     preparedStatement.setString(1, obj.getLogin());
-                    preparedStatement.setString(2, coding.getPassword(password));
+                    preparedStatement.setString(2, coding.getCode("54Fz" + password));
                     preparedStatement.executeUpdate();
                     if (flagWr) {
                         return ("Вы успешно зарегестрированы, на Вашу почту отправлен пароль.");

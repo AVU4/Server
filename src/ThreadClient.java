@@ -42,6 +42,8 @@ public class ThreadClient implements Runnable {
             }
 
         } catch (InterruptedException | IOException | ClassNotFoundException e) {
+        }catch (NullPointerException e){
+
         }catch (Exception e){
             e.printStackTrace();
         }
