@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -10,7 +11,7 @@ public class Request implements Serializable {
     private Integer age;
     private Integer volume;
     private Position position;
-    private Date date;
+    private ZonedDateTime date;
     private String login;
     private String password;
 
@@ -43,11 +44,11 @@ public class Request implements Serializable {
         this.password = password;
     }
 
-    public void setDate(Date date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
-    public Date getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 

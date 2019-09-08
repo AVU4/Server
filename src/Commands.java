@@ -58,13 +58,14 @@ public class Commands {
                 }
             case "add":
                 int x = catVector.Home.size();
-                    PreparedStatement stmt = connection.prepareStatement("INSERT INTO HomeOfCats (login, name, age, volume, x, y) VALUES ( ?, ?, ?, ?, ?, ?)");
+                    PreparedStatement stmt = connection.prepareStatement("INSERT INTO HomeOfCats (login, name, age, volume, x, y, date) VALUES ( ?, ?, ?, ?, ?, ?, ?)");
                     stmt.setString(1,obj.getLogin());
                     stmt.setString(2,obj.getName());
                     stmt.setInt(3,obj.getAge());
                     stmt.setInt(4, obj.getVolume());
                     stmt.setInt(5,obj.getPosition().getX());
                     stmt.setInt(6,obj.getPosition().getY());
+                    stmt.setString(7,obj.getDate().toString());
                     int i = stmt.executeUpdate();
                     stmt.close();
                     if (i != 0) {
@@ -76,13 +77,14 @@ public class Commands {
             case "remove":
 
                 catVector.remove(new Cat(obj.getName(), obj.getAge(), obj.getVolume(), obj.getPosition().getX(), obj.getPosition().getY()));
-                PreparedStatement statement = connection.prepareStatement("DELETE FROM homeofcats WHERE login=? and name=? and age=? and volume=? and x=? and y=?");
+                PreparedStatement statement = connection.prepareStatement("DELETE FROM homeofcats WHERE login=? and name=? and age=? and volume=? and x=? and y=? and date=?");
                 statement.setString(1, obj.getLogin());
                 statement.setString(2, obj.getName());
                 statement.setString(3, String.valueOf(obj.getAge()));
                 statement.setString(4,String.valueOf(obj.getVolume()));
                 statement.setString(5, String.valueOf(obj.getPosition().getX()));
                 statement.setString(6, String.valueOf(obj.getPosition().getY()));
+                statement.setString(7,obj.getDate().toString());
                 int a = statement.executeUpdate();
                 statement.close();
                 if ( a != 0){
@@ -111,7 +113,7 @@ public class Commands {
                 statement = connection.prepareStatement("SELECT * from homeofcats");
                 ResultSet reSet = statement.executeQuery();
                 while (reSet.next()){
-                    string += reSet.getString(2) + " " + reSet.getString(3) + " " + reSet.getString(4) + " " + reSet.getString(5) + " " + reSet.getString(6) + "\n";
+                    string += reSet.getString(2) + " " + reSet.getString(3) + " " + reSet.getString(4) + " " + reSet.getString(5) + " " + reSet.getString(6) + " " + reSet.getString(7) + "\n";
                 }
                 return string;
             case "info":
@@ -133,16 +135,20 @@ public class Commands {
                     }
                 }
                 if (flag == 1) {
-                    statement = connection.prepareStatement("Select * from users");
-                    resultSet = statement.executeQuery();
-                    while (resultSet.next()){
-                        if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getPassword(Integer.parseInt(obj.getPassword()))))){
-                            flag ++;
-                            return "Авторизация прошла успешна.";
+                    try {
+                        statement = connection.prepareStatement("Select * from users");
+                        resultSet = statement.executeQuery();
+                        while (resultSet.next()) {
+                            if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getPassword(Integer.parseInt(obj.getPassword()))))) {
+                                flag++;
+                                return "Авторизация прошла успешна.";
+                            }
                         }
-                    }
-                    if (flag == 1){
-                        return "Неверный пароль.";
+                        if (flag == 1) {
+                            return "Неверный пароль.";
+                        }
+                    }catch (NumberFormatException e){
+                        return ("Вы забыли ввести пароль или ввели буквы.");
                     }
                 }else{
                     int password =(int) ((Math.random()*10)*1000 + (Math.random()*10)*100 + (Math.random()*10)*10 + (Math.random()*10));
