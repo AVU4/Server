@@ -74,6 +74,8 @@ public class SendEmail {
             result = true;
         } catch (MessagingException e){
             System.err.println(e.getMessage());
+        } catch (NullPointerException e) {
+            return false;
         }
         return result;
     }
