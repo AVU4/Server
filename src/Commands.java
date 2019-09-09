@@ -144,9 +144,6 @@ public class Commands {
                         break;
                     }
                 }
-                if (flag == 0){
-                    return "Неверно введён логин пользователя.";
-                }
                 if (flag == 1) {
                     try {
                         statement = connection.prepareStatement("Select * from users");
@@ -175,11 +172,12 @@ public class Commands {
                     SendEmail sendEmail = new SendEmail(obj.getLogin(),"Регистрация");
                     boolean flagWr = sendEmail.sendMessage("Ваш пароль : " + password);
 
-                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
-                    preparedStatement.setString(1, obj.getLogin());
-                    preparedStatement.setString(2, coding.getCode("54Fz" + password));
-                    preparedStatement.executeUpdate();
+
                     if (flagWr) {
+                        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
+                        preparedStatement.setString(1, obj.getLogin());
+                        preparedStatement.setString(2, coding.getCode("54Fz" + password));
+                        preparedStatement.executeUpdate();
                         return ("Вы успешно зарегестрированы, на Вашу почту отправлен пароль.");
                     }else {
                         return ("Не удалось зарегестрироваться или Вы неправильно ввели почту.");

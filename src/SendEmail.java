@@ -73,7 +73,7 @@ public class SendEmail {
             Transport.send(message);
             result = true;
         } catch (MessagingException e){
-            System.err.println(e.getMessage());
+            return false;
         } catch (NullPointerException e) {
             return false;
         }
