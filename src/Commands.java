@@ -136,42 +136,28 @@ public class Commands {
                 return "Количество элементов " + num;
             case "in":
                 int flag = 0;
-                PreparedStatement stamt = connection.prepareStatement("Select login from users");
+                PreparedStatement stamt = connection.prepareStatement("Select login, password from users where login = ?");
+                stamt.setString(1, obj.getLogin());
                 ResultSet resultSet = stamt.executeQuery();
-                while (resultSet.next()){
-                    if (resultSet.getString(1).equals(obj.getLogin())){
-                        flag ++;
-                        break;
-                    }
-                }
-                if (flag == 1) {
+                if (resultSet.next()){ // Следовательно такая почта зарегестрирована в бд
                     try {
-                        statement = connection.prepareStatement("Select * from users");
-                        resultSet = statement.executeQuery();
-                        while (resultSet.next()) {
-                            if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getCode("54Fz" + obj.getPassword())))) {
-                                flag++;
-                                return "Авторизация прошла успешна.";
-                            }
-                        }
-                        if (flag == 1) {
-                            return "Неверный пароль.";
+                        if (resultSet.getString(2).equals(coding.getCode("54Fz" + obj.getPassword()))) { // Хэши совпали, следовательно может войти
+                            return "Авторизация прошла успешна.";
+                        } else {
+                            return "Неверный пароль";
                         }
                     }catch (NumberFormatException e){
-                        return ("Вы забыли ввести пароль.");
+                        return "Вы забыли ввести пароль.";
                     }
-                }else{
+                }else{ //Почты нет, значит регистрация
                     String password = coding.getPassword();
                     SendEmail.SMTP_SERVER = "smtp.mail.ru";
                     SendEmail.SMTP_Port = "465";
                     SendEmail.EMAIL_FROM = "lexa200004@mail.ru";
                     SendEmail.SMTP_AUTH_USER = "lexa200004";
                     SendEmail.SMTP_AUTH_PWD = "alex6a";
-
-
                     SendEmail sendEmail = new SendEmail(obj.getLogin(),"Регистрация");
                     boolean flagWr = sendEmail.sendMessage("Ваш пароль : " + password);
-
 
                     if (flagWr) {
                         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
@@ -183,6 +169,45 @@ public class Commands {
                         return ("Не удалось зарегестрироваться или Вы неправильно ввели почту.");
                     }
                 }
+//                if (flag == 1) {
+//                    try {
+//                        statement = connection.prepareStatement("Select * from users");
+//                        resultSet = statement.executeQuery();
+//                        while (resultSet.next()) {
+//                            if (resultSet.getString(1).equals(obj.getLogin()) && (resultSet.getString(2).equals(coding.getCode("54Fz" + obj.getPassword())))) {
+//                                flag++;
+//                                return "Авторизация прошла успешна.";
+//                            }
+//                        }
+//                        if (flag == 1) {
+//                            return "Неверный пароль.";
+//                        }
+//                    }catch (NumberFormatException e){
+//                        return ("Вы забыли ввести пароль.");
+//                    }
+//                }else{
+//                    String password = coding.getPassword();
+//                    SendEmail.SMTP_SERVER = "smtp.mail.ru";
+//                    SendEmail.SMTP_Port = "465";
+//                    SendEmail.EMAIL_FROM = "lexa200004@mail.ru";
+//                    SendEmail.SMTP_AUTH_USER = "lexa200004";
+//                    SendEmail.SMTP_AUTH_PWD = "alex6a";
+//
+//
+//                    SendEmail sendEmail = new SendEmail(obj.getLogin(),"Регистрация");
+//                    boolean flagWr = sendEmail.sendMessage("Ваш пароль : " + password);
+//
+//
+//                    if (flagWr) {
+//                        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
+//                        preparedStatement.setString(1, obj.getLogin());
+//                        preparedStatement.setString(2, coding.getCode("54Fz" + password));
+//                        preparedStatement.executeUpdate();
+//                        return ("Вы успешно зарегестрированы, на Вашу почту отправлен пароль.");
+//                    }else {
+//                        return ("Не удалось зарегестрироваться или Вы неправильно ввели почту.");
+//                    }
+//                }
 
 
             default:
