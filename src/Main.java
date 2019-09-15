@@ -38,31 +38,31 @@ public class Main {
                     }
 
                 }
-                try {
-                    String Path = System.getenv("Start");
-                    File file = new File(Path);
-                    Scanner scanner = new Scanner(file);
-                    while (scanner.hasNext()) {
-                        String str = scanner.nextLine();
-                        String[] strings = str.split(",");
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-                        // Name,Age,x,y,volume,date;
-                        catVector.add(new Cat(strings[0], Integer.parseInt(strings[1].trim()), Integer.parseInt(strings[2].trim()), Integer.parseInt(strings[3].trim()), Integer.parseInt(strings[4].trim()), dateFormat.parse(strings[5].trim())));
-                    }
-                    scanner.close();
-                } catch (ParseException e) {
-                    System.out.println("Возможно, вы указали неверно дату, а может вообще не указали.");
-                    System.exit(0);
-                } catch (NullPointerException e) {
-                    System.out.println("Не задана переменная окружения.");
-                    System.exit(0);
-                } catch (FileNotFoundException e) {
-                    System.out.println("Не удаётся открыть файл");
-                    System.exit(0);
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Неверно записаны данные в файле. Образец : Имя, Возраст, x, y, объём желудка, дата. A,1,2,3,4,Tue Jun 07 01:23:42 MSK 2019");
-                    System.exit(0);
-                }
+//                try {
+//                    String Path = System.getenv("Start");
+//                    File file = new File(Path);
+//                    Scanner scanner = new Scanner(file);
+//                    while (scanner.hasNext()) {
+//                        String str = scanner.nextLine();
+//                        String[] strings = str.split(",");
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+//                        // Name,Age,x,y,volume,date;
+//                        catVector.add(new Cat(strings[0], Integer.parseInt(strings[1].trim()), Integer.parseInt(strings[2].trim()), Integer.parseInt(strings[3].trim()), Integer.parseInt(strings[4].trim()), dateFormat.parse(strings[5].trim())));
+//                    }
+//                    scanner.close();
+//                } catch (ParseException e) {
+//                    System.out.println("Возможно, вы указали неверно дату, а может вообще не указали.");
+//                    System.exit(0);
+//                } catch (NullPointerException e) {
+//                    System.out.println("Не задана переменная окружения.");
+//                    System.exit(0);
+//                } catch (FileNotFoundException e) {
+//                    System.out.println("Не удаётся открыть файл");
+//                    System.exit(0);
+//                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+//                    System.out.println("Неверно записаны данные в файле. Образец : Имя, Возраст, x, y, объём желудка, дата. A,1,2,3,4,Tue Jun 07 01:23:42 MSK 2019");
+//                    System.exit(0);
+//                }
                 System.out.println("Ожидаю подключения.");
                 while (!serverSocket.isClosed()) {
                     Socket socket = serverSocket.accept();
@@ -103,7 +103,6 @@ public class Main {
             } catch (IOException e) {
             }
         }catch (Exception e){
-            e.printStackTrace();
         }
 
     }

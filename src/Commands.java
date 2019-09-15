@@ -159,6 +159,7 @@ public class Commands {
                     SendEmail sendEmail = new SendEmail(obj.getLogin(),"Регистрация");
                     boolean flagWr = sendEmail.sendMessage("Ваш пароль : " + password);
 
+
                     if (flagWr) {
                         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES(?, ?)");
                         preparedStatement.setString(1, obj.getLogin());

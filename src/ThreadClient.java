@@ -45,7 +45,6 @@ public class ThreadClient implements Runnable {
         }catch (NullPointerException e){
 
         }catch (Exception e){
-            e.printStackTrace();
         }
     }
 
